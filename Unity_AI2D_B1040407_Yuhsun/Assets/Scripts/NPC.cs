@@ -116,4 +116,12 @@ public class NPC : MonoBehaviour
         objCanvas.SetActive(false);
     }
 
+    /// <summary>
+    /// 玩家取得道具
+    /// </summary>
+    public void PlayerGet()
+    {
+        countPlayer++;
+    }
+
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class Hero : MonoBehaviour
 {
@@ -6,15 +7,15 @@ public class Hero : MonoBehaviour
     public float jump = 50.0f;       //跳躍數值
     public string heroName = "Hero";
     public bool pass = false;
-    public bool isGround = false;   //是否碰到牆壁
+    public bool isGround;   //是否碰到牆壁
+
+    public UnityEvent onEat; 
 
     private Rigidbody2D r2d;        //角色移動宣告
-    //private Transform tra;          //角色旋轉宣告
 
     private void Start()
     {
         r2d = GetComponent<Rigidbody2D>();
-        //tra = GetComponent<Transform>();
     }
 
     private void Update()
@@ -31,10 +32,27 @@ public class Hero : MonoBehaviour
         Jump();
     }
 
+    /// <summary>
+    /// 碰到地板開關
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isGround = true;
         Debug.Log("碰到地板" + collision.gameObject);
+    }
+
+    /// <summary>
+    /// 吃道具
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "carrot")
+        {
+            Destroy(collision.gameObject);      //刪除道具
+            onEat.Invoke();                     //呼叫事件
+        }
     }
 
     /// <summary>

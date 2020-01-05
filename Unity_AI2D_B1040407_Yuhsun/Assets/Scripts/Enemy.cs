@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
     public Transform checkPoint;
 
     private Rigidbody2D r2d;
-
+     
     private void Start()
     {
         r2d = GetComponent<Rigidbody2D>();
@@ -21,25 +21,63 @@ public class Enemy : MonoBehaviour
         Move();
     }
 
+    /// <summary>
+    /// 射線
+    /// </summary>
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawRay(checkPoint.position, -checkPoint.up * 3);
+        Gizmos.DrawRay(checkPoint.position, -checkPoint.up * 1.5f);
+    }
+
+    /// <summary>
+    /// 觸發
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.name == "Hero")
+        {
+            Track(collision.transform.position);
+        }
+    }
+
+    /// <summary>
+    /// 給予玩家傷害
+    /// </summary>
+    /// <param name="collision"></param>
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        collision.gameObject.GetComponent<Hero>().Damage(damege);
     }
 
     /// <summary>
     /// 移動
     /// </summary>
-    private void Move()  
+    private void Move()   
     {
-        r2d.AddForce(new Vector2(-speed, 0));
+        r2d.AddForce(-transform.right * speed);
+
+        RaycastHit2D hit =  Physics2D.Raycast(checkPoint.position, -checkPoint.up, 1.5f, 1 << 8);
+
+        if (hit == false)
+        {
+            transform.eulerAngles += new Vector3(0, 180, 0); 
+        }
     }
 
     /// <summary>
     /// 追蹤玩家
     /// </summary>
-    private void Track()
+    private void Track(Vector3 target)
     {
-
+        if (target.x < transform.position.x)
+        {
+            transform.eulerAngles = Vector3.zero;
+        }
+        else
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+        }
     }
 }

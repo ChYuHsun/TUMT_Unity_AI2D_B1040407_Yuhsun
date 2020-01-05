@@ -5,9 +5,10 @@ public class Hero : MonoBehaviour
 {
     public int speed = 10;          //移動數值
     public float jump = 50.0f;       //跳躍數值
-    public string heroName = "Hero";
     public bool pass = false;
     public bool isGround;   //是否碰到牆壁
+    [Header("血量"), Range(0, 200)]
+    public float hp = 100;
 
     public UnityEvent onEat; 
 
@@ -81,6 +82,11 @@ public class Hero : MonoBehaviour
     private void Turn(int direction = 0)
     {
         transform.eulerAngles = new Vector3(0, direction, 0);
+    }
+
+    public void Damage(float damage)
+    {
+        hp -= damage;
     }
 
 }

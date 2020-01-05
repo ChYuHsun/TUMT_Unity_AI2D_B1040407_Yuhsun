@@ -13,6 +13,7 @@ public class NPC : MonoBehaviour
         normal, notComplete, complete
     }
     public state _state;
+    public GameObject Win;
 
 
     [Header("對話")]
@@ -31,6 +32,8 @@ public class NPC : MonoBehaviour
     [Header("介面")]
     public GameObject objCanvas;
     public Text textSay;
+
+
     #endregion
 
     public AudioClip soundSay;
@@ -87,6 +90,10 @@ public class NPC : MonoBehaviour
                 break;
             case state.complete:
                 StartCoroutine(ShowDialog(sayComplete));       //完成對話
+                if (countFinish >= 10)
+                {
+                    Win.SetActive(true);
+                }
                 break;
         }
     }

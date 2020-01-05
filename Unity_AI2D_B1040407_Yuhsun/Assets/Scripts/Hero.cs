@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Hero : MonoBehaviour
 {
     public int speed = 10;          //移動數值
     public float jump = 50.0f;       //跳躍數值
-    public bool pass = false;
     public bool isGround;   //是否碰到牆壁
     [Header("血量"), Range(0, 200)]
     public float hp = 100;
+
+    public Image hpBar;
+    public GameObject final;
+    private float hpMax;
 
     public UnityEvent onEat; 
 
@@ -17,6 +21,8 @@ public class Hero : MonoBehaviour
     private void Start()
     {
         r2d = GetComponent<Rigidbody2D>();
+
+        hpMax = hp;
     }
 
     private void Update()
@@ -40,7 +46,12 @@ public class Hero : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isGround = true;
-        Debug.Log("碰到地板" + collision.gameObject);
+
+        if (collision.gameObject.tag == "down")
+        {
+            final.SetActive(true);
+            Death();
+        }
     }
 
     /// <summary>
@@ -54,6 +65,7 @@ public class Hero : MonoBehaviour
             Destroy(collision.gameObject);      //刪除道具
             onEat.Invoke();                     //呼叫事件
         }
+
     }
 
     /// <summary>
@@ -87,6 +99,19 @@ public class Hero : MonoBehaviour
     public void Damage(float damage)
     {
         hp -= damage;
+        hpBar.fillAmount = hp / hpMax;
+
+        if (hp <= 0)
+        {
+            final.SetActive(true);
+            Death();
+        }
     }
 
+    public void Death()
+    {
+        this.GetComponent<Hero>().enabled = false;
+    }
+
+    
 }

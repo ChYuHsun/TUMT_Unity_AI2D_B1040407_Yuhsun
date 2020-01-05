@@ -48,7 +48,15 @@ public class Enemy : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        collision.gameObject.GetComponent<Hero>().Damage(damege);
+        if (collision.gameObject.name == "Hero" && collision.transform.position.y < transform.position.y + 1)
+        {
+            collision.gameObject.GetComponent<Hero>().Damage(damege);
+        }
+        if (collision.gameObject.name == "Hero" && collision.transform.position.y > transform.position.y + 1)
+        {
+            Destroy(this.gameObject);
+        }
+
     }
 
     /// <summary>
